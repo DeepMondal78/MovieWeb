@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/common/Navbar';
 import MovieCard from '@/components/movie/MovieCard';
@@ -7,7 +7,7 @@ import { Movie } from '@/lib/types/movie';
 import { FiArrowRight } from 'react-icons/fi';
 import gsap from 'gsap';
 
-export default function Home() {
+function MovieContent() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
@@ -65,7 +65,6 @@ export default function Home() {
       });
   }, [category, genre, search]);
 
-  // Format header title nicely
   const getPageTitle = () => {
     if (category) {
       return category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -83,10 +82,8 @@ export default function Home() {
     <main className="min-h-screen bg-zinc-950 text-white pb-20">
       <Navbar />
       
-      {/* Hero Section (Hidden when filtering or searching) */}
       {!category && !genre && !search && (
         <section ref={heroRef} className="pt-36 md:pt-44 px-6 sm:px-12 lg:px-20 w-full text-center relative overflow-hidden">
-
           <h1 className="hero-animate text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter uppercase font-[Antonio]">
             <span className="text-zinc-200">WELCOME TO</span> <span className="text-red-600 font-[Antonio]">MuvieFlex</span>
           </h1>
@@ -107,7 +104,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* Movies / Series Collection Section */}
       <section id="movies-section" className={`${category || genre || search ? 'pt-32' : 'pt-28'} px-6 sm:px-10 lg:px-12 w-full`}>
         <div className="border-b border-zinc-800 pb-4 mb-10 flex items-center justify-between">
           <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white font-sans capitalize">
@@ -133,5 +129,17 @@ export default function Home() {
         )}
       </section>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-red-600"></div>
+      </div>
+    }>
+      <MovieContent />
+    </Suspense>
   );
 }
