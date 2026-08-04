@@ -1,7 +1,8 @@
 "use client";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
 
@@ -18,5 +19,19 @@ export default function SearchPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-red-600"></div>
+        </div>
+      }
+    >
+      <SearchContent />
+    </Suspense>
   );
 }
