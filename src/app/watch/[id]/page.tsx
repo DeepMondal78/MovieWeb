@@ -7,7 +7,7 @@ import {
   FiCalendar,
   FiGlobe,
   FiArrowLeft,
-  FiDownload,
+  FiFilm,
 } from "react-icons/fi";
 import Link from "next/link";
 
@@ -17,9 +17,9 @@ export default function WatchPage() {
   const [movie, setMovie] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedQuality, setSelectedQuality] = useState("1080p");
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isPlayingFullMovie, setIsPlayingFullMovie] = useState(false); // ফুল মুভি প্লে করার নতুন স্টেট
-  const [selectedAudio, setSelectedAudio] = useState("en"); // ডিফল্ট ইংরেজি বা অটো
+  
+  // একদম নিচের ফুল মুভি প্লেয়ারের স্টেট (শুরুতে ফালস থাকবে, ক্লিক করলে ট্রু হবে)
+  const [isPlayingFullMovie, setIsPlayingFullMovie] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -77,8 +77,8 @@ export default function WatchPage() {
 
   const youtubeEmbedUrl =
     movie.trailerKey && movie.trailerKey !== "ZZ5LpwO-An4"
-      ? `https://www.youtube.com/embed/${movie.trailerKey}?autoplay=1`
-      : `https://www.youtube.com/embed/2QKg5SZ_TSg?autoplay=1`;
+      ? `https://www.youtube.com/embed/${movie.trailerKey}`
+      : `https://www.youtube.com/embed/2QKg5SZ_TSg`;
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white pb-20">
@@ -133,52 +133,21 @@ export default function WatchPage() {
       <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* বাম দিকের মূল কন্টেন্ট */}
         <div className="lg:col-span-2 space-y-8">
-          {/* ভিডিও প্লেয়ার (এখানে ট্রেইলার বা ফুল মুভি প্লে হবে) */}
-          <div className="aspect-video bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden relative flex items-center justify-center shadow-2xl">
-            {!isPlaying && !isPlayingFullMovie ? (
-              <>
-                <div
-                  className="absolute inset-0 bg-cover bg-center opacity-40 filter blur-sm"
-                  style={{ backgroundImage: `url(${movie.posterPath})` }}
-                ></div>
-                <div className="absolute inset-0 bg-black/50"></div>
-                <div className="relative z-10 text-center p-6">
-                  <button
-                    onClick={() => setIsPlaying(true)}
-                    className="w-20 h-20 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center mx-auto text-white shadow-2xl hover:scale-110 transition-transform cursor-pointer"
-                  >
-                    <FiPlay size={36} className="ml-1" />
-                  </button>
-                  <p className="mt-4 font-bold text-xl text-white tracking-wide">
-                    Play Official Trailer
-                  </p>
-                  <p className="text-xs text-zinc-400 mt-1">
-                    High Quality Streaming ({selectedQuality})
-                  </p>
-                </div>
-              </>
-            ) : isPlayingFullMovie ? (
-              // ইউজার "Watch Now" ক্লিক করলে ফুল মুভি প্লে হবে
-              <iframe
-                src={
-                  movie.fullMovieUrl ||
-                  `https://vidsrc.xyz/embed/movie?tmdb=${movie._id}`
-                }
-                title={movie.title}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            ) : (
-              // ইউজার ট্রেইলার বাটনে ক্লিক করলে ট্রেইলার প্লে হবে
+          
+          {/* ১. ট্রেইলার সেকশন (এখানে শুধু অফিশিয়াল ট্রেইলার দেখাবে) */}
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-white border-l-4 border-red-600 pl-3 flex items-center gap-2">
+              <FiFilm className="text-red-500" /> Official Trailer
+            </h3>
+            <div className="aspect-video bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden relative shadow-2xl">
               <iframe
                 src={youtubeEmbedUrl}
-                title={movie.title}
+                title={`${movie.title} Trailer`}
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
-            )}
+            </div>
           </div>
 
           {/* কোয়ালিটি সিলেকশন বার */}
@@ -238,7 +207,7 @@ export default function WatchPage() {
             </div>
           )}
 
-          {/* Movie Screenshots / Scene Images Section */}
+          {/* Movie Screenshots Section */}
           {movie.images && movie.images.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-white border-l-4 border-red-600 pl-3">
@@ -251,7 +220,7 @@ export default function WatchPage() {
                     className="group relative aspect-video rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-xl transition-all duration-300 hover:border-red-600/60 hover:shadow-red-600/10 cursor-pointer"
                   >
                     <img
-                      src={imgUrl}
+                      src= {imgUrl}
                       alt={`Movie Scene ${idx + 1}`}
                       className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
                     />
@@ -266,30 +235,60 @@ export default function WatchPage() {
             </div>
           )}
 
-          {/* স্ক্রিনশট ক্লিপগুলোর নিচে Watch Now এবং Download বাটন */}
-          <div className="bg-zinc-900/90 backdrop-blur border border-zinc-800 p-6 rounded-2xl shadow-xl space-y-4">
-            <h4 className="text-sm font-bold text-zinc-300 uppercase tracking-wider">
-              Enjoy Full Movie ({selectedQuality})
-            </h4>
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              {/* নতুন ট্যাবে মুভি ওপেন করার জন্য সঠিক এবং সচল লিংক */}
-              <a
-  href={
-    movie.type === "tv"
-      ? `https://vidlink.pro/tv/${movie._id}/1/1?audio=${selectedAudio}`
-      : `https://vidlink.pro/movie/${movie._id}?audio=${selectedAudio}`
-  }
-  target="_blank"
-  rel="noopener noreferrer"
-  className="w-full sm:flex-1 flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-red-600/30 transition text-center cursor-pointer"
->
-  <FiPlay size={16} /> <span>Watch Now ({selectedAudio === 'hi' ? 'Hindi' : 'Default'})</span>
-</a>
+          {/* ২. স্ক্রিনশট ক্লিপগুলোর নিচে ফুল মুভি প্লেয়ার এবং বাটন সেকশন */}
+          <div className="space-y-4 pt-6 border-t border-zinc-800">
+            <h3 className="text-xl font-bold text-white border-l-4 border-red-600 pl-3">
+              Stream Full Movie ({selectedQuality})
+            </h3>
+
+            {/* ফুল মুভি প্লে করার বক্স */}
+            <div className="aspect-video bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden relative flex items-center justify-center shadow-2xl">
+              {!isPlayingFullMovie ? (
+                <>
+                  <div
+                    className="absolute inset-0 bg-cover bg-center opacity-40 filter blur-sm"
+                    style={{ backgroundImage: `url(${movie.posterPath})` }}
+                  ></div>
+                  <div className="absolute inset-0 bg-black/50"></div>
+                  <div className="relative z-10 text-center p-6">
+                    <button
+                      onClick={() => setIsPlayingFullMovie(true)}
+                      className="w-20 h-20 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center mx-auto text-white shadow-2xl hover:scale-110 transition-transform cursor-pointer"
+                    >
+                      <FiPlay size={36} className="ml-1" />
+                    </button>
+                    <p className="mt-4 font-bold text-xl text-white tracking-wide">
+                      Click to Play Full Movie
+                    </p>
+                    <p className="text-xs text-zinc-400 mt-1">
+                      High Speed Secure Streaming Server
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <iframe
+                  src={`https://vidlink.pro/movie/${movie._id}`}
+                  title={movie.title}
+                  className="w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              )}
+            </div>
+
+            {/* নিচে বাটন দুটি */}
+            <div className="bg-zinc-900/90 backdrop-blur border border-zinc-800 p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row items-center gap-3">
+              <button
+                onClick={() => setIsPlayingFullMovie(true)}
+                className="w-full sm:flex-1 flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-red-600/30 transition text-center cursor-pointer"
+              >
+                <FiPlay size={16} /> <span>Watch Now (Full Movie)</span>
+              </button>
               <a
                 href="#download"
                 className="w-full sm:flex-1 flex items-center justify-center space-x-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-3 rounded-xl text-sm font-bold border border-zinc-700 transition text-center"
               >
-                <FiDownload size={16} /> <span>Download</span>
+                <span>Download Options</span>
               </a>
             </div>
           </div>
