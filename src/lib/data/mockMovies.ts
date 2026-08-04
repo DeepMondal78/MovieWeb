@@ -12,7 +12,10 @@ export const mockMovies: Movie[] = [
     language: 'bengali',
     type: 'movie',
     qualities: ['360p', '720p', '1080p'],
-    videoUrls: {}
+    videoUrls: {
+      '720p': 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      '1080p': 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+    }
   },
   {
     _id: '2',

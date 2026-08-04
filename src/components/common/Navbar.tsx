@@ -66,10 +66,10 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-900">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+        <div className="w-full px-3 sm:px-6 lg:px-4 xl:px-8">
+          <div className="flex items-center justify-between h-20 gap-2">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center shrink-0">
               <span className="text-3xl flex font-[Antonio] text-red-600 tracking-tighter">
                 <Image
                   src="/m2.webp"
@@ -82,8 +82,8 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* Desktop Category Pills Menu */}
-            <div className="hidden lg:flex items-center space-x-2">
+            {/* Desktop Category Pills Menu (1024px friendly flex) */}
+            <div className="hidden lg:flex items-center space-x-1.5 xl:space-x-2 shrink-0">
               {[
                 { name: "Tollywood", query: "tollywood" },
                 { name: "Bollywood", query: "bollywood" },
@@ -94,7 +94,7 @@ export default function Navbar() {
                 <Link
                   key={cat.name}
                   href={`/?category=${cat.query}`}
-                  className="px-5.5 py-1.5 rounded-full border border-zinc-700/60 text-[13px] font-[Antonio] text-zinc-300 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition"
+                  className="px-3 xl:px-4 py-1.5 rounded-full border border-zinc-700/60 text-[11px] xl:text-[13px] font-[Antonio] text-zinc-300 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition whitespace-nowrap"
                 >
                   {cat.name}
                 </Link>
@@ -107,7 +107,7 @@ export default function Navbar() {
                     setWebSeriesOpen(!webSeriesOpen);
                     setGenresOpen(false);
                   }}
-                  className="flex items-center space-x-1 px-5.5 py-1.5 rounded-full border border-zinc-700/60 text-[13px] font-[Antonio] text-zinc-300 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition cursor-pointer"
+                  className="flex items-center space-x-1 px-3 xl:px-4 py-1.5 rounded-full border border-zinc-700/60 text-[11px] xl:text-[13px] font-[Antonio] text-zinc-300 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition cursor-pointer whitespace-nowrap"
                 >
                   <span>Web Series</span>
                   <FiChevronDown
@@ -116,7 +116,6 @@ export default function Navbar() {
                   />
                 </button>
 
-                {/* Web Series Dropdown with Gap & Animation */}
                 <div
                   className={`absolute top-full mt-3 w-48 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl py-2 z-50 transition-all duration-300 transform origin-top ${webSeriesOpen ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}
                 >
@@ -136,7 +135,7 @@ export default function Navbar() {
               {/* 18+ Badge Pill */}
               <button
                 onClick={handle18PlusClick}
-                className="px-3 py-1 rounded-full border border-zinc-800 hover:border-red-600 text-[13px] font-[Antonio] text-zinc-400 hover:text-white transition cursor-pointer"
+                className="px-2.5 py-1 rounded-full border border-zinc-800 hover:border-red-600 text-[11px] xl:text-[13px] font-[Antonio] text-zinc-400 hover:text-white transition cursor-pointer shrink-0"
               >
                 18+
               </button>
@@ -148,7 +147,7 @@ export default function Navbar() {
                     setGenresOpen(!genresOpen);
                     setWebSeriesOpen(false);
                   }}
-                  className="flex items-center space-x-1 px-3.5 py-1.5 rounded-full border border-zinc-700/60 text-xs font-medium text-zinc-300 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition cursor-pointer"
+                  className="flex items-center space-x-1 px-2.5 xl:px-3.5 py-1.5 rounded-full border border-zinc-700/60 text-[11px] xl:text-xs font-medium text-zinc-300 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition cursor-pointer whitespace-nowrap"
                 >
                   <span>GENREs</span>
                   <FiChevronDown
@@ -157,7 +156,6 @@ export default function Navbar() {
                   />
                 </button>
 
-                {/* Genres Dropdown with Gap & Animation */}
                 <div
                   className={`absolute top-full mt-3 w-48 max-h-64 overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl py-2 z-50 transition-all duration-300 transform origin-top ${genresOpen ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}
                 >
@@ -176,7 +174,7 @@ export default function Navbar() {
             </div>
 
             {/* Search & Sign Up */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 shrink-0">
               <form
                 onSubmit={handleSearch}
                 className="relative flex items-center"
@@ -186,19 +184,19 @@ export default function Navbar() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search"
-                  className="bg-zinc-950 border border-zinc-800 rounded-full pl-5 pr-14 py-2 text-sm text-zinc-300 placeholder-zinc-400 focus:outline-none w-36 sm:w-52 md:w-60 transition"
+                  className="bg-zinc-950 border border-zinc-800 rounded-full pl-3.5 lg:pl-4 pr-11 py-2 text-xs text-zinc-300 placeholder-zinc-400 focus:border-red-600 w-32 focus:outline-none sm:w-44 lg:w-40 xl:w-52 transition"
                 />
                 <button
                   type="submit"
-                  className="absolute right-1.5 w-8 h-8 bg-red-700 hover:bg-red-800 rounded-full flex items-center justify-center text-white transition shadow-sm cursor-pointer"
+                  className="absolute right-1 w-7 h-7 bg-red-700 hover:bg-red-800 rounded-full flex items-center justify-center text-white transition shadow-sm cursor-pointer"
                 >
-                  <FiSearch size={14} />
+                  <FiSearch size={12} />
                 </button>
               </form>
 
               <Link
                 href="/signup"
-                className="hidden sm:inline-block bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-5 py-2 rounded-full transition shadow-lg shadow-red-600/30 whitespace-nowrap"
+                className="hidden sm:inline-block bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3.5 xl:px-5 py-2 rounded-full transition shadow-lg shadow-red-600/30 whitespace-nowrap"
               >
                 Sign Up
               </Link>
@@ -216,7 +214,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu Slide-Down Animation with Proper Gap */}
+        {/* Mobile Menu Slide-Down Animation */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-400 ease-in-out bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-900 ${isOpen ? "max-h-[90vh] opacity-100 py-6 px-6 shadow-2xl" : "max-h-0 opacity-0 py-0 px-6"}`}
         >
@@ -238,7 +236,6 @@ export default function Navbar() {
               </Link>
             ))}
             
-            {/* Mobile 18+ Button */}
             <button
               onClick={() => {
                 setIsOpen(false);
@@ -301,7 +298,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* 18+ Age Verification & Terms Modal */}
+      {/* 18+ Age Verification Modal */}
       {showAgeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl relative">
