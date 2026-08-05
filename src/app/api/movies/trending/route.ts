@@ -48,8 +48,8 @@ export async function GET(request: Request) {
       baseUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=878,14&primary_release_date.gte=2025-01-01&sort_by=popularity.desc`;
     } else if (category === "anime") {
       baseUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_genres=16&first_air_date.gte=2025-01-01&sort_by=popularity.desc`;
-    } else if (category === "adult") {
-      baseUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&certification_country=US&certification=R&primary_release_date.gte=2025-01-01&sort_by=popularity.desc`;
+    } else if (category === "ullu") {
+      baseUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_networks=2902&include_adult=true&sort_by=popularity.desc`;
     } else if (genre && genreMap[genre]) {
       baseUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genreMap[genre]}&primary_release_date.gte=2025-01-01&sort_by=popularity.desc`;
     }
@@ -59,20 +59,64 @@ export async function GET(request: Request) {
     }
 
     let allResults: any[] = [];
-    const totalPagesToFetch = 25;
 
-    for (let page = 1; page <= totalPagesToFetch; page++) {
-      const pageUrl = `${baseUrl}&page=${page}`;
-      const res = await fetch(pageUrl);
-      const data = await res.json();
+    // যদি category=adult হয়, তবে সরাসরি Ullu ও English Adult ডেটা একসাথে ফেচ করা হবে
+   // যদি category=adult হয়, তবে Ullu-র একাধিক পেজ এবং English Adult মুভি মিলিয়ে ৩০০+ কন্টেন্ট আনা হবে
+    if (category === "adult") {
+      let ulluResults: any[] = [];
+      let englishResults: any[] = [];
 
-      if (data.results && data.results.length > 0) {
-        allResults = [...allResults, ...data.results];
-      } else {
-        break;
+      // উলু (Ullu) এর কন্টেন্ট বেশি পাওয়ার জন্য ১৫টি পেজ পর্যন্ত ফেচ করা (১৫ * ২০ = ৩০০+ কন্টেন্ট)
+      for (let page = 1; page <= 15; page++) {
+        const ulluUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_networks=2902&include_adult=true&sort_by=popularity.desc&page=${page}`;
+        try {
+          const res = await fetch(ulluUrl);
+          const data = await res.json();
+          if (data.results && data.results.length > 0) {
+            ulluResults = [...ulluResults, ...data.results];
+          } else {
+            break;
+          }
+        } catch (err) {
+          break;
+        }
       }
 
-      if (search) break;
+      // ইংলিশ অ্যাডাল্ট মুভিগুলোর জন্য ৫টি পেজ ফেচ করা
+      for (let page = 1; page <= 5; page++) {
+        const englishAdultUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&certification_country=US&certification=R&include_adult=true&sort_by=popularity.desc&page=${page}`;
+        try {
+          const res = await fetch(englishAdultUrl);
+          const data = await res.json();
+          if (data.results && data.results.length > 0) {
+            englishResults = [...englishResults, ...data.results];
+          } else {
+            break;
+          }
+        } catch (err) {
+          break;
+        }
+      }
+
+      // উলু এবং ইংলিশ মুভি একসাথে যুক্ত করা (যেহেতু লুপ চালানো হয়েছে, তাই উলু-র পরিমাণ অনেক বেশি থাকবে)
+      allResults = [...ulluResults, ...englishResults];
+
+    } else {
+      // অন্যান্য ক্যাটাগরির জন্য সাধারণ লুপ
+      const totalPagesToFetch = 25;
+      for (let page = 1; page <= totalPagesToFetch; page++) {
+        const pageUrl = `${baseUrl}&page=${page}`;
+        const res = await fetch(pageUrl);
+        const data = await res.json();
+
+        if (data.results && data.results.length > 0) {
+          allResults = [...allResults, ...data.results];
+        } else {
+          break;
+        }
+
+        if (search) break;
+      }
     }
 
     // Remove duplicate movies based on item.id
@@ -105,13 +149,11 @@ export async function GET(request: Request) {
           const creditsData = await creditsRes.json();
           const imagesData = await imagesRes.json();
 
-          // ট্রেইলার ফিল্টার
           const officialTrailer = videoData.results?.find(
             (vid: any) => vid.site === "YouTube" && vid.type === "Trailer",
           );
           if (officialTrailer) trailerKey = officialTrailer.key;
 
-          // কাস্ট বা অ্যাক্টর লিস্ট (প্রথম ১০ জন)
           castList =
             creditsData.cast?.slice(0, 10).map((actor: any) => ({
               name: actor.name,
@@ -121,7 +163,6 @@ export async function GET(request: Request) {
                 : null,
             })) || [];
 
-          // মুভির স্ক্রিনশট বা ব্যাকড্রপ ইমেজ (কমপক্ষে ৫টি নিশ্চিত করার লজিক)
           let rawImages =
             imagesData.backdrops?.map(
               (img: any) => `https://image.tmdb.org/t/p/w780${img.file_path}`
@@ -146,7 +187,6 @@ export async function GET(request: Request) {
           // ইগ্নোর এরর
         }
 
-        // ফুল মুভি স্ট্রিম করার জন্য ডাইনামিক এমবেড লিংক তৈরি
         const fullMovieEmbedUrl = mediaType === "tv"
           ? `https://vidsrc.xyz/embed/tv?tmdb=${item.id}&season=1&episode=1`
           : `https://vidsrc.xyz/embed/movie?tmdb=${item.id}`;
@@ -171,7 +211,7 @@ export async function GET(request: Request) {
           type: mediaType,
           qualities: ["360p", "720p", "1080p"],
           trailerKey: trailerKey,
-          fullMovieUrl: fullMovieEmbedUrl, // নতুন যুক্ত করা ফুল মুভি লিংক
+          fullMovieUrl: fullMovieEmbedUrl,
           cast: castList,
           images: imageList,
         };
