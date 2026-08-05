@@ -277,20 +277,22 @@ export default function WatchPage() {
             </div>
 
             {/* নিচে বাটন দুটি */}
-            <div className="bg-zinc-900/90 backdrop-blur border border-zinc-800 p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row items-center gap-3">
-              <button
-                onClick={() => setIsPlayingFullMovie(true)}
-                className="w-full sm:flex-1 flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-red-600/30 transition text-center cursor-pointer"
-              >
-                <FiPlay size={16} /> <span>Watch Now (Full Movie)</span>
-              </button>
-              <a
-                href="#download"
-                className="w-full sm:flex-1 flex items-center justify-center space-x-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-3 rounded-xl text-sm font-bold border border-zinc-700 transition text-center"
-              >
-                <span>Download Options</span>
-              </a>
-            </div>
+          <div className="bg-zinc-900/90 backdrop-blur border border-zinc-800 p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row items-center gap-3">
+            <button
+              onClick={() => setIsPlayingFullMovie(true)}
+              className="w-full sm:flex-1 flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-red-600/30 transition text-center cursor-pointer"
+            >
+              <FiPlay size={16} /> <span>Watch Now (Full Movie)</span>
+            </button>
+            <a
+              href={`https://dl.vidsrc.vip/movie/${movie._id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:flex-1 flex items-center justify-center space-x-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-3 rounded-xl text-sm font-bold border border-zinc-700 transition text-center cursor-pointer"
+            >
+              <span>Download Now</span>
+            </a>
+          </div>
           </div>
         </div>
 
