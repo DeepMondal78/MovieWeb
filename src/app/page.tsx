@@ -18,7 +18,11 @@ function MovieContent() {
 
   const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+ useEffect(() => {
+    // চেক করা হচ্ছে যে .hero-animate ক্লাসযুক্ত এলিমেন্টটি পেজে আছে কি না
+    const heroElements = document.querySelectorAll('.hero-animate');
+    if (heroElements.length === 0) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.hero-animate',
@@ -95,7 +99,7 @@ function MovieContent() {
           <div className="hero-animate mt-10">
             <a 
               href="#movies-section"
-              className="inline-flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-bold px-9 py-4 rounded-full text-sm sm:text-base shadow-xl shadow-red-600/30 transition transform hover:scale-105"
+              className="inline-flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-[Antonio] px-9 py-4 rounded-full text-sm sm:text-base shadow-xl shadow-red-600/30 transition transform hover:scale-105"
             >
               <span>Explore Now</span>
               <FiArrowRight size={20} />
@@ -106,7 +110,7 @@ function MovieContent() {
 
       <section id="movies-section" className={`${category || genre || search ? 'pt-32' : 'pt-28'} px-6 sm:px-10 lg:px-12 w-full`}>
         <div className="border-b border-zinc-800 pb-4 mb-10 flex items-center justify-between">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white font-sans capitalize">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white font-[Antonio] capitalize">
             {getPageTitle()} <span className="text-red-600 text-lg md:text-2xl font-normal ml-3">({movies.length}+ Items)</span>
           </h2>
         </div>
@@ -135,7 +139,7 @@ function MovieContent() {
 export default function Home() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white">
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center font-[Antonio] text-white">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-red-600"></div>
       </div>
     }>

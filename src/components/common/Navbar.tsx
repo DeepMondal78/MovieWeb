@@ -9,7 +9,7 @@ export default function Navbar() {
   const [webSeriesOpen, setWebSeriesOpen] = useState(false);
   const [genresOpen, setGenresOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // 18+ Age Verification Modal State
   const [showAgeModal, setShowAgeModal] = useState(false);
 
@@ -71,14 +71,20 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0">
               <span className="text-3xl flex font-[Antonio] text-red-600 tracking-tighter">
-                <Image
-                  src="/m2.webp"
-                  alt="MuviFlex Logo"
-                  width={40}
-                  height={40}
-                  className="mr-0.5"
-                />
-                <span className="text-white font-[Syne] mr-0.5 lowercase">uvie</span>Flex
+                <div className="relative h-8 w-22 -mr-14">
+                  <Image
+                    src="/m2.webp"
+                    alt="Logo"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 112px"
+                    className="object-contain object-left"
+                    priority
+                  />
+                </div>
+                <span className="text-white font-[Syne] mr-0.5 lowercase">
+                  uvie
+                </span>
+                Flex
               </span>
             </Link>
 
@@ -235,7 +241,7 @@ export default function Navbar() {
                 {cat.name}
               </Link>
             ))}
-            
+
             <button
               onClick={() => {
                 setIsOpen(false);
@@ -305,11 +311,16 @@ export default function Navbar() {
             <div className="w-12 h-12 bg-red-600/10 border border-red-600/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">
               18+
             </div>
-            
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Age Verification Required</h3>
-            
+
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+              Age Verification Required
+            </h3>
+
             <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-6">
-              This section contains mature content and adult themes intended strictly for audiences aged 18 and above. By clicking &quot;Agree & Enter&quot;, you confirm that you are at least 18 years old and agree to our Terms & Conditions.
+              This section contains mature content and adult themes intended
+              strictly for audiences aged 18 and above. By clicking &quot;Agree
+              & Enter&quot;, you confirm that you are at least 18 years old and
+              agree to our Terms & Conditions.
             </p>
 
             <div className="flex items-center space-x-3">

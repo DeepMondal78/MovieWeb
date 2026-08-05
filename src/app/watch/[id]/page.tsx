@@ -114,7 +114,7 @@ export default function WatchPage() {
               HD Quality
             </span>
           </div>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold mt-3 text-white drop-shadow-2xl tracking-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-[Antonio] mt-3 text-white drop-shadow-2xl tracking-tight">
             {movie.title}
           </h1>
           <div className="flex items-center space-x-6 mt-4 text-sm text-zinc-300 font-medium">
@@ -136,13 +136,14 @@ export default function WatchPage() {
           
           {/* ১. ট্রেইলার সেকশন (এখানে শুধু অফিশিয়াল ট্রেইলার দেখাবে) */}
           <div className="space-y-3">
-            <h3 className="text-xl font-bold text-white border-l-4 border-red-600 pl-3 flex items-center gap-2">
+            <h3 className="text-xl font-[Antonio] text-white border-l-4 border-red-600 pl-3 flex items-center gap-2">
               <FiFilm className="text-red-500" /> Official Trailer
             </h3>
             <div className="aspect-video bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden relative shadow-2xl">
               <iframe
                 src={youtubeEmbedUrl}
                 title={`${movie.title} Trailer`}
+                loading="lazy"
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -175,7 +176,7 @@ export default function WatchPage() {
           {/* Cast / Actors Section */}
           {movie.cast && movie.cast.length > 0 && (
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white border-l-4 border-red-600 pl-3">
+              <h3 className="text-xl font-[Antonio] text-white border-l-4 border-red-600 pl-3">
                 Top Cast
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
@@ -210,7 +211,7 @@ export default function WatchPage() {
           {/* Movie Screenshots Section */}
           {movie.images && movie.images.length > 0 && (
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white border-l-4 border-red-600 pl-3">
+              <h3 className="text-xl font-[Antonio] text-white border-l-4 border-red-600 pl-3">
                 Movie Scenes & Screenshots
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -237,7 +238,7 @@ export default function WatchPage() {
 
           {/* ২. স্ক্রিনশট ক্লিপগুলোর নিচে ফুল মুভি প্লেয়ার এবং বাটন সেকশন */}
           <div className="space-y-4 pt-6 border-t border-zinc-800">
-            <h3 className="text-xl font-bold text-white border-l-4 border-red-600 pl-3">
+            <h3 className="text-xl font-[Antonio] text-white border-l-4 border-red-600 pl-3">
               Stream Full Movie ({selectedQuality})
             </h3>
 
@@ -270,6 +271,7 @@ export default function WatchPage() {
                   src={`https://vidlink.pro/movie/${movie._id}`}
                   title={movie.title}
                   className="w-full h-full border-0"
+                  loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
